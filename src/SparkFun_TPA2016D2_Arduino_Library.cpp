@@ -232,6 +232,26 @@ unsigned char TPA2016D2::disableShutdown()
   return 0;
 }
 
+boolean TPA2016D2::readFaultLeft()
+{
+  TPA2016D2::readFaults(&_leftFault, &_rightFault, &_thermalFault);
+  if(_leftFault) return 1;
+  return 0;
+}
+
+boolean TPA2016D2::readFaultRight()
+{
+  TPA2016D2::readFaults(&_leftFault, &_rightFault, &_thermalFault);
+  if(_rightFault) return 1;
+  return 0;
+}
+
+boolean TPA2016D2::readFaultThermal()
+{
+  TPA2016D2::readFaults(&_leftFault, &_rightFault, &_thermalFault);
+  if(_thermalFault) return 1;
+  return 0;
+}
 
 unsigned char TPA2016D2::readFaults(unsigned char *left, unsigned char *right, unsigned char *thermal)
 // Return all three fault settings.
@@ -251,6 +271,21 @@ unsigned char TPA2016D2::readFaults(unsigned char *left, unsigned char *right, u
   }
   else
     return 0;
+}
+
+unsigned char TPA2016D2::resetFaults()
+// reset all fault flags 
+// Returns 1 if successful, 0 if something failed (I2C error)
+{
+  unsigned char regvalue;
+
+	// Read the register, modify only the bits we need, and write back the modified value
+  if (TPA2016D2::readRegister(TPA2016D2_CONTROL_REGISTER,&regvalue))
+  {
+    if (TPA2016D2::writeRegister(TPA2016D2_CONTROL_REGISTER,((regvalue & B11100011)))); //Clear bits 2,3,4
+      return 1;
+  }
+  return 0;
 }
 
 

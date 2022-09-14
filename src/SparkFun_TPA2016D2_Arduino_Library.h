@@ -88,6 +88,11 @@ class TPA2016D2
 		
 		// Read fault conditions
 		unsigned char readFaults(unsigned char *left, unsigned char *right, unsigned char *thermal);
+		boolean readFaultLeft();
+		boolean readFaultRight();
+		boolean readFaultThermal();
+		unsigned char resetFaults();
+
 		
 		// Enable and disable noise gate
 		unsigned char enableNoiseGate();
@@ -136,7 +141,9 @@ class TPA2016D2
 	private:
 		TwoWire *_i2cPort;
 		uint8_t _deviceAddress = TPA2016D2_ADDR;
-
+		unsigned char _leftFault = 0;
+		unsigned char _rightFault = 0;
+		unsigned char _thermalFault = 0;
 };
 
 

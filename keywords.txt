@@ -19,6 +19,10 @@ disableLeftSpeaker				KEYWORD2
 enableShutdown						KEYWORD2
 disableShutdown						KEYWORD2
 readFaults								KEYWORD2
+readFaultLeft								KEYWORD2
+readFaultRight								KEYWORD2
+readFaultThermal								KEYWORD2
+resetFaults								KEYWORD2
 enableNoiseGate						KEYWORD2
 disableNoiseGate					KEYWORD2
 writeAttack								KEYWORD2

@@ -1,13 +1,20 @@
 /******************************************************************************
-  Example _01_Gain.ino
-  Sets a few different gain values on the TPA2016D2 speaker amp.
+  Example _04_Read_Faults.ino
+  Reads the faults from the TPA2016D2 and prints them to terminal, once a second.
 
-  Note, when gain is "0", it still passes sound through.
-  To turn the sound off, use shutdown or enable/disable examples.
+  DO NOT connect speakers leads while sound is playing through speaker.
 
-  Note, you can't REALLY turn off the AGC on the TPA2016D2,
-  But if you disable the limiter, noisegate, and set fast release/attack
-  times, then it only minimally effects gain changes.
+  This should only be used to detect shorts on speaker lines BEFORE actually turning on your source.
+
+  If you connect the "+" and "-" terminals of either speaker, then the TPA2016D2
+  can detect this "fault condition". and protect itself.
+  Load this sketch, and watch the terminal to see the faults trigger when you 
+  connect "+" to "-".
+  After 3 seconds, it will reset the fault register flags, reset the device (via shutdown) 
+  and start printing statuses again.
+
+  Note, in order to cause a Thermal Fault, you may need a louder audio source, a higher gain
+  settings, and/or the limiting disabled.
 
   SparkFun TPA2016D2 Arduino Library
   Pete Lewis @ SparkFun Electronics
@@ -51,38 +58,46 @@
 #include <SparkFun_TPA2016D2_Arduino_Library.h> //Click here to get the library: http://librarymanager/All#SparkFun_TPA2016D2
 TPA2016D2 amp;
 
+boolean faultRight, faultLeft, faultThermal;
+
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Example 1 - Setting Gain Values.");
+  Serial.println("Example 4 - Read Faults");
 
   Wire.begin();
 
   if (amp.begin() == false) //Begin communication over I2C
   {
     Serial.println("The device did not respond. Please check wiring.");
-    while (1); //Freeze
+    while(1); //Freeze
   }
   Serial.println("Device is connected properly.");
-
-  // for gain control to react to changes quickly, we need to adjust some of the AGC settings as so...
-  amp.disableLimiter(); // note this also changes compression ratio to 1:1, then disables limiter.
-  amp.disableNoiseGate(); // disabling the noisegate allows us to always change the gain, even with very little sound at the source.
-  amp.writeRelease(1); // 1-63 are valid values. 1 being the shortest (aka fastest) release setting, this allows gain increases to happen quickly.
-  amp.writeAttack(1); // 1-63 are valid values. 1 being the shortest (aka fastest) attack setting, this allows gain decreases to happen quickly.
 }
 
 void loop()
 {
-  Serial.println("gain:+30 (max)");
-  amp.writeFixedGain(30); // aka "full gain at +30dB", accepts values from 0 to 30
-  delay(5000);
+  faultLeft = amp.readFaultLeft();
+  faultRight = amp.readFaultRight();
+  faultThermal = amp.readFaultThermal();
 
-  Serial.println("gain:+15 (mid)");
-  amp.writeFixedGain(15);
-  delay(5000);
+  if (faultLeft == true) Serial.println("Left speaker fault detected!");
+  if (faultRight == true) Serial.println("Right speaker fault detected!");
+  if (faultThermal == true) Serial.println("Thermal fault detected!");
 
-  Serial.println("gain:0 (min)");
-  amp.writeFixedGain(0);
-  delay(5000);
+  if(faultLeft || faultRight || faultThermal)
+  {
+    Serial.println("Waiting 3 seconds, then reseting faults...");
+    delay(3000);
+    amp.resetFaults();
+    delay(1000);
+    amp.enableShutdown();
+    delay(1000);
+    amp.disableShutdown();
+  }
+  else
+  {
+    Serial.println("No faults detected :)");
+    delay(1000);
+  }
 }
