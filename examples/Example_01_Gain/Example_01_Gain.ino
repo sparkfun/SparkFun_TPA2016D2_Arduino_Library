@@ -70,10 +70,7 @@ void setup()
   amp.disableNoiseGate(); // disabling the noisegate allows us to always change the gain, even with very little sound at the source.
   amp.writeRelease(1); // 1-63 are valid values. 1 being the shortest (aka fastest) release setting, this allows gain increases to happen quickly.
   amp.writeAttack(1); // 1-63 are valid values. 1 being the shortest (aka fastest) attack setting, this allows gain decreases to happen quickly.
-}
 
-void loop()
-{
   Serial.println("gain:+30 (max)");
   amp.writeFixedGain(30); // aka "full gain at +30dB", accepts values from 0 to 30
   delay(5000);
@@ -85,4 +82,11 @@ void loop()
   Serial.println("gain:0 (min)");
   amp.writeFixedGain(0);
   delay(5000);
+
+  Serial.println("Example complete. Hit Reset to try again.");
+}
+
+void loop()
+{
+  // nothing to see here.
 }
