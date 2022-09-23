@@ -64,6 +64,13 @@
 #define TPA2016D2_AGC1_REGISTER 6
 #define TPA2016D2_AGC2_REGISTER 7
 
+// control settings
+#define COMPRESSION_RATIO_1_1 0x00
+#define COMPRESSION_RATIO_2_1 0x01
+#define COMPRESSION_RATIO_4_1 0x10
+#define COMPRESSION_RATIO_8_1 0x11
+
+
 class TPA2016D2
 {
 	public:
