@@ -1,7 +1,7 @@
 SparkFun TPA2016D2 Arduino Library
 ========================================
 
-[![SparkFun Qwiic Speaker Amp - TPA2016D2](https://www.sparkfun.com/products/20690)](https://www.sparkfun.com/products/20690)
+[![SparkFun Qwiic Speaker Amp - TPA2016D2](https://cdn.sparkfun.com/assets/parts/2/0/5/3/2/20690_DEV-_SparkFun_Qwiic_Speaker_Amp-_01.jpg)](https://www.sparkfun.com/products/20690)
 
 [*SparkFun Qwiic Speaker Amp - TPA2016D2 (DEV-20690)*](https://www.sparkfun.com/products/20690)
 
